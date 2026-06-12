@@ -1,0 +1,97 @@
+<!DOCTYPE HTML>
+<html lang="ja">
+　<head>
+　　<meta charset="UTF-8" />
+　　<meta name="viewport" content="width=device-width,initial-scale=1" />
+　　<title>Document</title>
+　　<script type="module" src="https://unpkg.com/@fluentui/web-components"></script>
+　　<style>
+　　　:root {--neutral-layer-1: f3f3f3;}
+　　　body {font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; padding: 20px;}
+　　　.game-container {
+　　　　width: 100%;
+　　　　max-width: 500px;
+　　　　padding: 20px;
+　　　　background: var(--neutral-layer-1);
+　　　　border-radius: 12px;
+　　　　text-align: center;
+　　　}
+
+　　　.actions {
+　　　　display: grid;
+　　　　gap: 10px;
+　　　}
+　　　
+　　　.reveal-card {
+　　　　width: 100%; max-width: 400px; padding: 30px; background: white;
+　　　　border-radius: 16px; position: relative; overflow: hidden;
+　　　　box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+　　　}
+　　　
+　　　.reveal-light {
+　　　　position: absolute; width: 200px; height: 200px;
+　　　　background: radial-gradient(circle, rgba(255,255,255,0.4) 0%, transparent 70%);
+　　　　pointer-events: none; transform: translate(-50%, -50%); opacity: 0;
+　　　　transition: opacity 0.3s;
+　　　}
+　　　@media (min-width: 600px) {
+　　　　　.actions{grid-template-columns: 1fr 1fr; }
+　　　}
+    </head>
+　<body>
+　　<div class="game-container reveal-card" id="card">
+　　　<div class="reveal-light" id="light"></div>
+　　　<h1>クリックゲーム</h1>
+　　　<div id="counter" style="font-size: 2em; margin-bottom: 20px">ポイント: 0</div>
+　　　
+　　　<div class="actions">
+　　　　<fluent-button id="clickBtn" appearance="accent">クリック！</fluent-button>
+　　　　<fluent-button id="autoClickBtn">自動クリック</fluent-button>
+　　　　<fluent-button id="rebirthBtn" appearance="outline">再生！</fluent-button>
+　　　</div>
+</div>
+　<script>
+　　window.onload = function(){
+　　　const result = confirm(`クリッカーゲームへようこそ！
+当アプリケーションではFluentDesignを使ったコントロールを対応しています。
+FluentDesignコントロールの一部要素では、
+モダン向けブラウザを前提にしてる可能性があるので
+反映されない方はChromeまたはMicrosoft Edge（Windows 10/11 標準搭載）
+にする。
+または最新版のiOS・AndroidOSにする。
+など対策をとっておくことを強くお勧めします。
+古いiOSには対応していないかもしれない為注意をしてください。
+ちょっと古いiOSでは、FireFoxまたはChromeを用意することをお勧めします。
+注意事項ページ （note.html）を開きますか?`)
+　　　if(result===true)
+　　　{
+　　　　window.location.href="note.html"
+　　　}
+　　　else
+　　　{
+              result;
+　　　}
+　　}
+　　const card = document.getElementById("card");
+　　const light = document.getElementById("light");
+　　card.onmousemove = (e) => {
+　　　light.style.opacity = "1";
+　　　const rect = card.getBoundingClientRect();
+　　　light.style.left = (e.clientX - rect.left) + "px";
+　　　light.style.top = (e.clientY - rect.top) + "px";
+　　}
+　　card.onmouseleave = () => light.style.opacity = "0";
+　　
+　　window.addEventListener("devicemotion", (event) => {
+　　　　const acc = event.accelerationIncludingGravity;
+　　　　if(Math.abs(acc.x) > 15 || Math.abs(acc.y) > 15) {
+　　　　　points += 1;
+　　　　　updateUI();
+　　　　}
+　　});
+　　let points = 0
+　　function updateUI() { document.getElementById("counter").innerText = `ポイント: ${Math.floor(points)}`; }
+document.getElementById("clickBtn").onclick = () => { points++; updateUI(); }
+　</script>
+　</body>
+</html>
