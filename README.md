@@ -1,0 +1,2 @@
+# ClickerGame-FluentDesign
+FluentDesignをガンガンフル活用したゲームです
